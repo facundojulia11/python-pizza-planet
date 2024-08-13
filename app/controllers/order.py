@@ -12,7 +12,9 @@ class OrderController(BaseController):
 
     @staticmethod
     def calculate_order_price(size_price: float, ingredients: list):
-        price = sum(ingredient.price for ingredient in ingredients)
+        ingredients_total_price = sum(ingredient.price for ingredient in ingredients)
+        
+        price = size_price + ingredients_total_price
         return round(price, 2)
 
     @classmethod
@@ -22,6 +24,7 @@ class OrderController(BaseController):
             return 'Invalid order payload', None
 
         size_id = current_order.get('size_id')
+        print(size_id)
         size = SizeManager.get_by_id(size_id)
 
         if not size:
