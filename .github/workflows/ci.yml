@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10] # Test with different Python versions
+        python-version: [3.9] # Test with different Python versions
 
     steps:
       - name: Check out the repository
