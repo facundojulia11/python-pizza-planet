@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from ..common.utils import check_required_keys
 from ..repositories.managers import (IngredientManager, OrderManager,
                                      SizeManager)
+from app.controllers.utils.order import calculate_ingredients_total_amount
 from .base import BaseController
 
 
@@ -12,7 +13,7 @@ class OrderController(BaseController):
 
     @staticmethod
     def calculate_order_price(size_price: float, ingredients: list):
-        ingredients_total_price = sum(ingredient.price for ingredient in ingredients)
+        ingredients_total_price = calculate_ingredients_total_amount(ingredients)
         
         price = size_price + ingredients_total_price
         return round(price, 2)
