@@ -25,7 +25,6 @@ class OrderController(BaseController):
             return 'Invalid order payload', None
 
         size_id = current_order.get('size_id')
-        print(size_id)
         size = SizeManager.get_by_id(size_id)
 
         if not size:
