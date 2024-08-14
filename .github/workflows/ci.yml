@@ -2,9 +2,9 @@ name: Python CI
 
 on:
   push:
-    branches: [main] # Run on every push to the main branch
+    branches: [main, develop] # Run on every push to the main branch
   pull_request:
-    branches: [main] # Run on pull requests to the main branch
+    branches: [main, develop] # Run on pull requests to the main branch
 
 jobs:
   test:
@@ -12,8 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.9] # Test with different Python versions
-
+        python-version: [3.9]
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
