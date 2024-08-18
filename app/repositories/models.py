@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from datetime import datetime 
 from app.plugins import db
 
 
@@ -16,21 +15,20 @@ class Order(db.Model):
     size = db.relationship('Size', backref=db.backref('size'))
     detail = db.relationship('OrderDetail', backref=db.backref('order_detail'))
 
-
-class Ingredient(db.Model):
+class BaseProduct(db.Model):
+    __abstract__ = True
     _id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
 
-class Size(db.Model):
-    _id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    price = db.Column(db.Float, nullable=False)
+class Size(BaseProduct):
+    __tablename__="size"
 
-class Beverage(db.Model):
-    _id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    price = db.Column(db.Float, nullable=False)
+class Beverage(BaseProduct):
+    __tablename__="beverage"
+
+class Ingredient(BaseProduct):
+    __tablename__="ingredient"
 
 
 class OrderDetail(db.Model):
