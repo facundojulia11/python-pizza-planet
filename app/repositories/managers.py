@@ -122,6 +122,7 @@ class ReportManager():
         return most_requested_ingredient
     
     def get_month_with_highest_revenue(cls):
+
         revenue_by_month = (
             cls.session.query(
                 extract('year', Order.date).label('year'),
@@ -145,6 +146,7 @@ class ReportManager():
         return most_revenue_month
     
     def get_top_customers(cls):
+      
         top_customers = (
             cls.session.query(
                 Order.client_name,
