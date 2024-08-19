@@ -1,10 +1,6 @@
 from app.common.http_methods import GET, POST, PUT
 from flask import Blueprint, jsonify, request
 
-from ..controllers import IngredientController
-
-ingredient = Blueprint('ingredient', __name__)
-
 
 def create(entity_controller):
     entity, error = entity_controller.create(request.json)

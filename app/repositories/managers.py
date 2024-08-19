@@ -1,6 +1,6 @@
 from typing import Any, List, Optional, Sequence
 
-from sqlalchemy.sql import text, column
+from sqlalchemy.sql import text, column, func, extract
 
 from .models import Ingredient, Beverage, Order, OrderDetail, Size, db
 from .serializers import (IngredientSerializer, BeverageSerializer, OrderSerializer,
@@ -85,6 +85,85 @@ class OrderManager(BaseManager):
     @classmethod
     def update(cls):
         raise NotImplementedError(f'Method not suported for {cls.__name__}')
+
+class ReportManager():
+    session = db.session
+    serializer = IngredientSerializer
+
+    @classmethod
+    def get_report(cls):
+        data = {
+            "most_requested_ingredient":cls.get_most_requested_ingredient(cls),
+            "most_revenue_month": cls.get_month_with_highest_revenue(cls),
+            "top_three_customers": cls.get_top_customers(cls)
+        }
+        return data
+
+
+    def get_most_requested_ingredient(cls):
+
+        most_requested = (
+            cls.session.query(OrderDetail.ingredient_id, func.count(OrderDetail.ingredient_id).label('ingredient_count'))
+            .group_by(OrderDetail.ingredient_id)
+            .order_by(func.count(OrderDetail.ingredient_id).desc())
+            .first()
+        )
+
+        if not most_requested:
+            return None
+
+        ingredient = cls.session.query(Ingredient).get(most_requested.ingredient_id)
+        
+        most_requested_ingredient={
+            "ingredient": ingredient.name,
+            "count": most_requested.ingredient_count
+        }
+
+        return most_requested_ingredient
+    
+    def get_month_with_highest_revenue(cls):
+        # Query to calculate total revenue per month
+        revenue_by_month = (
+            cls.session.query(
+                extract('year', Order.date).label('year'),
+                extract('month', Order.date).label('month'),
+                func.sum(Order.total_price).label('total_revenue')
+            )
+            .group_by('year', 'month')
+            .order_by(func.sum(Order.total_price).desc())
+            .first()
+        )
+
+        if not revenue_by_month:
+            return None
+
+        most_revenue_month={
+            "month": revenue_by_month.month,
+            "year": revenue_by_month.year,
+            "total": revenue_by_month.total_revenue,
+        }
+
+        return most_revenue_month
+    
+    def get_top_customers(cls):
+
+        top_customers = (
+            cls.session.query(
+                Order.client_name,
+                func.count(Order._id).label('order_count')
+            )
+            .group_by(Order.client_name)
+            .order_by(func.count(Order._id).desc())
+            .limit(3)
+            .all()
+        )
+        
+        # Convert SQLAlchemy Row objects to dictionaries
+        result = [{"client_name": customer.client_name, "order_count": customer.order_count} for customer in top_customers]
+
+        return result
+
+
 
 
 class IndexManager(BaseManager):

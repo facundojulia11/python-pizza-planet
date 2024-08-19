@@ -1,11 +1,8 @@
 from faker import Faker
 from random import choice, randint, sample
-from datetime import datetime, timedelta
 from app.plugins import db, ma
 from app import flask_app
 from app.scripts.utils import fake_data
-from app.test.utils.functions import get_random_price, get_random_string
-from app.controllers import IngredientController
 from app.repositories.models import Order, OrderDetail, Ingredient, Size, Beverage
 from app.services.services import create, update, get_all, get_by_id
 
@@ -107,6 +104,9 @@ def remove_product(Model):
         except Exception as e:
             db.session.rollback()
             return f"An error occurred: {str(e)}"
+        
+from sqlalchemy import func
+from app.repositories.models import OrderDetail, Ingredient
 
 def remove_all():
     remove_product(Size)
