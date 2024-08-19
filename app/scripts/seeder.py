@@ -104,9 +104,6 @@ def remove_product(Model):
         except Exception as e:
             db.session.rollback()
             return f"An error occurred: {str(e)}"
-        
-from sqlalchemy import func
-from app.repositories.models import OrderDetail, Ingredient
 
 def remove_all():
     remove_product(Size)
