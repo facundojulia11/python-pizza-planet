@@ -5,8 +5,6 @@ from app.test.utils.functions import get_random_string, get_random_price
 
 def test_create_order(create_order):
     order = create_order.json
-    print("ORDER: ", order)
-    print("STARTTS: ",create_order.status)
     pytest.assume(create_order.status.startswith('200'))
     pytest.assume("client_name" in order)
     pytest.assume("detail" in order)

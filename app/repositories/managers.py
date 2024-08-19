@@ -122,7 +122,6 @@ class ReportManager():
         return most_requested_ingredient
     
     def get_month_with_highest_revenue(cls):
-        # Query to calculate total revenue per month
         revenue_by_month = (
             cls.session.query(
                 extract('year', Order.date).label('year'),
@@ -146,7 +145,6 @@ class ReportManager():
         return most_revenue_month
     
     def get_top_customers(cls):
-
         top_customers = (
             cls.session.query(
                 Order.client_name,
@@ -158,7 +156,6 @@ class ReportManager():
             .all()
         )
         
-        # Convert SQLAlchemy Row objects to dictionaries
         result = [{"client_name": customer.client_name, "order_count": customer.order_count} for customer in top_customers]
 
         return result
